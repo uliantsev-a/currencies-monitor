@@ -1,0 +1,73 @@
+version: '2'
+services:
+  postgres:
+    image: postgres
+    restart: always
+    container_name: curr_monitor_postgres
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    env_file: .env
+    ports:
+      - "5433:5432"
+  nginx:
+    restart: always
+    container_name: curr_monitor_nginx
+    image: nginx:1.11.10
+    ports:
+      - '80:80'
+    volumes:
+      - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./CurrenciesMonitor:/src
+    depends_on:
+      - api
+      - client
+    logging:
+      options:
+        max-size: '100k'
+        max-file: '10'
+  api:
+    restart: always
+    container_name: curr_monitor_api
+    build:
+      context: "."
+    env_file: .env
+    volumes:
+      - .:/src
+    logging:
+      options:
+        max-size: '100k'
+        max-file: '10'
+    depends_on:
+      - redis
+      - postgres
+  client:
+    restart: always
+    container_name: curr_monitor_client
+    image: node:10.6.0
+    command: bash -c "cd client && npm install && export HOST=0.0.0.0 && npm run dev"
+    volumes:
+      - ./client:/client
+    logging:
+      options:
+        max-size: '100k'
+        max-file: '10'
+  redis:
+    image: "redis:alpine"
+  celery:
+      build: .
+      container_name: curr_monitor_celery
+      command: celery -A CurrenciesMonitor worker -l info
+      volumes:
+        - ./CurrenciesMonitor:/src
+      depends_on:
+        - api
+      env_file: .env
+  celery-beat:
+      build: .
+      container_name: curr_monitor_celerybeat
+      command: celery -A CurrenciesMonitor beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+      volumes:
+        - ./CurrenciesMonitor:/src
+      depends_on:
+        - celery
+      env_file: .env
