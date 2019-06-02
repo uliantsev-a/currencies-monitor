@@ -1,0 +1,8 @@
+[
+  {"model": "Trade.currency", "pk": 529, "fields": {"name": "TFUELTUSD", "monitored": true}},
+  {"model": "Trade.currency", "pk": 530, "fields": {"name": "TFUELPAX", "monitored": true}},
+  {"model": "Trade.currency", "pk": 531, "fields": {"name": "ONEBNB", "monitored": false}},
+  {"model": "Trade.currency", "pk": 532, "fields": {"name": "ONEBTC", "monitored": false}},
+  {"model": "Trade.currency", "pk": 533, "fields": {"name": "ONEUSDT", "monitored": false}},
+  {"model": "Trade.currency", "pk": 534, "fields": {"name": "ONETUSD", "monitored": false}}
+]
