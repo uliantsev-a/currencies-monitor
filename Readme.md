@@ -1,4 +1,14 @@
-Fast way for running:
+## Currencies monitor
+The simple apps for periodic upload last prices currencies from https://api.binance.com/
+You can familiarize with this api [here](https://github.com/binance-exchange/binance-official-api-docs/)
+
+App include next option:   
+- Through Celery worker periodic upload prices (by default each 30 seconds)
+- backend app (from Django) with API endpoinds for getting history prices and admin panel for turnoff monitoring one currency.
+- web client from Vue.
+- Docker config for running the applications together
+
+**Fast way for running:**
 ```sh 
 docker-compose build  
 docker-compose up  
