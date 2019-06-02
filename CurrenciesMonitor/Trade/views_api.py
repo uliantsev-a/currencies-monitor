@@ -11,6 +11,7 @@ class CurrencyViewSet(
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet
 ):
+    # TODO: need add pagination setting
     queryset = Currency.objects.prefetch_related(
         Prefetch('rate_set', queryset=Rate.objects.order_by('-created'))
     )
